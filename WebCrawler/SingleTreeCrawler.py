@@ -26,8 +26,9 @@ class SingleTreeCrawler:
 
         if current_depth < self.max_depth:
             for link in current_web_node.get_links():
-                children_nodes.append(self.__create_web_page_node(link, parent=current_web_node))
-
+                if link not in self.visited:
+                    children_nodes.append(self.__create_web_page_node(link, parent=current_web_node))
+                    self.visited.add(link)
             current_depth = current_depth + 1
 
             for child in children_nodes:
