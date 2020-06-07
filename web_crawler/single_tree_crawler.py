@@ -1,7 +1,7 @@
 import requests
 import re
 from urllib.parse import urlparse
-from WebPageInfoNode import WebPageInfoNode
+from web_page_info_node import WebPageInfoNode
 
 
 class SingleTreeCrawler:

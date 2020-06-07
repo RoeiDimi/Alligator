@@ -1,4 +1,4 @@
-from SingleTreeCrawler import SingleTreeCrawler
+from single_tree_crawler import SingleTreeCrawler
 from anytree import RenderTree
 
 if __name__ == "__main__":
