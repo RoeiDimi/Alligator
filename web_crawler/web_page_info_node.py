@@ -5,6 +5,11 @@ class WebPageInfoNode(NodeMixin):
     def __init__(self, url, html, links, parent=None, children=None):
         super().__init__()
 
+        if parent:
+            self.parent = parent
+        if children:
+            self.children = children
+            
         self.url = url
         self.html = html
         self.links = links
