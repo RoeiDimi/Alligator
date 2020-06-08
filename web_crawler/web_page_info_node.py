@@ -2,14 +2,10 @@ from anytree import NodeMixin
 
 
 class WebPageInfoNode(NodeMixin):
-    def __init__(self, url, html, links, parent=None, children=None):
+    def __init__(self, url, html, links, parent=None):
         super().__init__()
 
-        if parent:
-            self.parent = parent
-        if children:
-            self.children = children
-            
+        self.parent = parent
         self.url = url
         self.html = html
         self.links = links

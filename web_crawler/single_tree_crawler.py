@@ -34,8 +34,8 @@ class SingleTreeCrawler:
             for child in children_nodes:
                 self.__create_subtree_recursive(child, current_depth)
 
-    def __create_web_page_node(self, url, parent=None, children=None):
-        return WebPageInfoNode(url, self.__extract_html(url), self.__extract_links(url), parent, children)
+    def __create_web_page_node(self, url, parent=None):
+        return WebPageInfoNode(url, self.__extract_html(url), self.__extract_links(url), parent)
 
     def __extract_html(self, url):
         html = requests.get(url)
