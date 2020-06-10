@@ -1,24 +1,19 @@
-from single_tree_crawler import SingleTreeCrawler
+from abc import ABC, abstractmethod
 
-
-class WebCrawler:
+class WebCrawler(ABC):
 
     '''
-    A crawler. crawls a list of urls. receives each url with the depth which this url should be crawled into
-    '''
-    def __init__(self, urls_and_depths_tuples_list=None):
-        self.urls_forrest = []
+    A base class for crawlers
 
-        if urls_and_depths_tuples_list:
-            self.add_trees(urls_and_depths_tuples_list)
+    a crawler is expected to implement def get_web_pages_tree and returns a forrest
+    a forrest is a list of trees created by anytree module
+    a tree should contain a starting page that started a crawl as the head where children of a node are
+    the pages accessible from the page according to the crawler's crawling policy
+
+    '''
+    def __init__(self):
+        super.__init__()
+
+    @abstractmethod
+    def get_web_pages_forrest(self):
         pass
-
-    def add_trees(self, urls_and_depths_tuples_list):
-        for url_depth_tuple in urls_and_depths_tuples_list:
-            url = url_depth_tuple[0]
-            depth = url_depth_tuple[1]
-            crawled_tree = SingleTreeCrawler(url, depth).get_web_pages_tree()
-            self.urls_forrest.append(crawled_tree)
-
-    def get_forrest(self):
-        return self.urls_forrest

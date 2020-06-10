@@ -1,13 +1,16 @@
 import requests
 import re
 from urllib.parse import urlparse
+from web_crawler import WebCrawler
 from web_page_info_node import WebPageInfoNode
 
+LINKS_BLACKLIST_WORDS = ['mailto', 'javascript', ' ']
 
-class SingleTreeCrawler:
+
+class SingleTreeCrawler(WebCrawler):
     """
     Scrapes the subtree of web pages starting from starting_url, up to max_depth depth
-    follows the links in every web page and returns a tree containing the html of the pages
+    follows the links in every web page and returns a forrest with a single tree containing the html of the pages
     """
 
     def __init__(self, starting_url, max_depth):
@@ -17,9 +20,9 @@ class SingleTreeCrawler:
         self.visited = set(starting_url)
         self.current_depth = 1
 
-    def get_web_pages_tree(self):
+    def get_web_pages_forrest(self):
         self.__create_subtree_recursive(self.head, self.current_depth)
-        return self.head
+        return [self.head]
 
     def __create_subtree_recursive(self, current_web_node, current_depth):
         children_nodes = []
@@ -38,7 +41,10 @@ class SingleTreeCrawler:
         return WebPageInfoNode(url, self.__extract_html(url), self.__extract_links(url), parent)
 
     def __extract_html(self, url):
-        html = requests.get(url)
+        try:
+            html = requests.get(url)
+        except requests.exceptions.ConnectionError:
+            html = requests.get(url.replace("https://", "http://"))
         return html.content.decode('latin-1')
 
     def __extract_links(self, url):
@@ -51,4 +57,6 @@ class SingleTreeCrawler:
                 link_with_base = base + link
                 links[i] = link_with_base
 
-        return set(filter(lambda x: 'mailto' not in x, links))
+        good_links = [link for link in links
+                if not any(word in link for word in LINKS_BLACKLIST_WORDS)]
+        return set(good_links)
