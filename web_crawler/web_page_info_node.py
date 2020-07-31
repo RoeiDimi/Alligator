@@ -2,12 +2,18 @@ from anytree import NodeMixin
 
 
 class WebPageInfoNode(NodeMixin):
-    def __init__(self, url, html, links, parent=None):
+    """
+    encapsulates the information gathered from a crawled site
+    also, its a NodeMixin which means it is a node in a tree data structure. this helps us with saving the
+    data of a recursive crawl in a tree
+    """
+    def __init__(self, url, html, headers, links, parent=None):
         super().__init__()
 
         self.parent = parent
         self.url = url
         self.html = html
+        self.headers = headers
         self.links = links
 
     def get_url(self):
@@ -18,3 +24,6 @@ class WebPageInfoNode(NodeMixin):
 
     def get_links(self):
         return self.links
+
+    def get_headers(self):
+        return self.headers
