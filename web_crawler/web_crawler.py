@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-class WebCrawler(ABC):
 
+class WebCrawler(ABC):
     '''
     A base class for crawlers
 
@@ -11,9 +11,10 @@ class WebCrawler(ABC):
     the pages accessible from the page according to the crawler's crawling policy
 
     '''
+
     def __init__(self):
-        super.__init__()
+        super(WebCrawler,self).__init__()
 
     @abstractmethod
-    def get_web_pages_forrest(self):
+    def get_web_pages_tree(self):
         pass
