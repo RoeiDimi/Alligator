@@ -1,7 +1,6 @@
-from exceptions import TooManyTriesException
 from web_crawler import WebCrawler
-from web_page_info_node import WebPageInfoNode
-from scraping_tools import extract_html_and_headers, extract_links
+from web_crawler.web_page_info_node import WebPageInfoNode
+from web_crawler.scraping_tools import extract_html_and_headers, extract_links
 import asyncio
 
 

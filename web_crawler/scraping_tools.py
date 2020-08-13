@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 import aiohttp
 from aiohttp import TooManyRedirects
 
-from exceptions import SchemalessUrlException
+from web_crawler.exceptions import SchemalessUrlException
 import async_timeout
 import asyncio
 

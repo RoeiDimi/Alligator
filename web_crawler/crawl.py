@@ -5,7 +5,7 @@
     the module uses asyncio in order to maximize performance by sending asynchronous http requests
 """
 
-from single_tree_crawler import SingleTreeCrawler
+from web_crawler.single_tree_crawler import SingleTreeCrawler
 import asyncio
 import aiohttp
 
