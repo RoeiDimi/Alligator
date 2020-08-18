@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import pytz
 import string
 
-HOST = "127.0.0.1"
+HOST = "10.0.0.112"
 ALL_PAGES_INDEX = "all_web_pages_small_html-index"
 MAX_HTML_SIZE_CHARS = 10 ** 4
 

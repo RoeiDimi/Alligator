@@ -6,23 +6,45 @@ import re
 from urllib.parse import urlparse
 import aiohttp
 from aiohttp import TooManyRedirects
+import contextlib
 
 from web_crawler.exceptions import SchemalessUrlException
 import async_timeout
 import asyncio
 
+from ssl import SSLError
+
 LINKS_BLACKLIST_WORDS = ['mailto', 'javascript', ' ', 'void(0)', '{']
+
+
+@contextlib.contextmanager
+def suppress_ssl_exception_report():
+    loop = asyncio.get_event_loop()
+    old_handler = loop.get_exception_handler()
+    old_handler_fn = old_handler or (lambda _loop, ctx: loop.default_exception_handler(ctx))
+    def ignore_exc(_loop, ctx):
+        exc = ctx.get('exception')
+        if isinstance(exc, SSLError):
+            return
+        old_handler_fn(loop, ctx)
+    loop.set_exception_handler(ignore_exc)
+    try:
+        yield
+    finally:
+        loop.set_exception_handler(old_handler)
+
 
 
 async def fetch(url, session, semaphore):
     """
     asynchronous http get
     """
-    async with semaphore:
-        print("semaphore value: {0}".format(semaphore._value))
-        with async_timeout.timeout(30):
-            async with session.get(url, max_redirects=30) as response:
-                return await response.text('latin-1'), response.status, response.headers
+    with suppress_ssl_exception_report():
+        async with semaphore:
+            print("semaphore value: {0}".format(semaphore._value))
+            with async_timeout.timeout(30):
+                async with session.get(url, max_redirects=30) as response:
+                    return await response.text('latin-1'), response.status, response.headers
 
 
 async def extract_html_and_headers(url, session, semaphore):

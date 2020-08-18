@@ -6,14 +6,14 @@ SPORT_SITES = ["https://www.nbcsports.com/", "https://www.espn.com/", "https://s
 NEWS_SITES = ["https://news.yahoo.com/", "https://www.huffpost.com/", "https://edition.cnn.com/", "https://www.nytimes.com/"]
 ECOMMERCE_SITES = ["https://www.ebay.com/", "https://www.rakuten.com/", "https://www.aliexpress.com/"]
 BUSINESS_SITES = ["https://www.google.com/", "https://www.microsoft.com/en-us/", "https://www.apple.com/"]
-MAX_DEPTH = 1
+MAX_DEPTH = 3
 
 if __name__ == '__main__':
     start = time.time()
 
     forrest = crawl.crawl([*SPORT_SITES, *NEWS_SITES, *ECOMMERCE_SITES, *BUSINESS_SITES], MAX_DEPTH)
 
-    print("crawl finished")
+    print("crawl finished in {0} seconds".format(time.time() - start))
 
     handle_data.handle(filter(lambda tree: tree is not None, forrest))
 
