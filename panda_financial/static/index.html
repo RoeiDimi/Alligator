@@ -92,6 +92,7 @@
         .card:nth-child(1) { animation-delay: 0.1s; }
         .card:nth-child(2) { animation-delay: 0.2s; }
         .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
 
         h2 {
             font-weight: 600;
@@ -113,7 +114,7 @@
             font-weight: 500;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 12px 16px;
             box-sizing: border-box;
@@ -124,9 +125,10 @@
             font-family: 'Rubik', sans-serif;
             font-size: 1rem;
             transition: all 0.2s;
+            appearance: none;
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #00c6ff;
             box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.1);
@@ -267,8 +269,51 @@
         <div id="mortgageResult" class="result"></div>
     </div>
 
-    <!-- News Feed (Mock) -->
+    <!-- Currency Converter -->
     <div class="card">
+        <h2>
+            <span>💱</span>
+            המרת מט"ח
+        </h2>
+        <label>סכום להמרה</label>
+        <input type="number" id="currAmount" placeholder="100">
+        <label>ממטבע</label>
+        <select id="currFrom">
+            <option value="USD">דולר ארה"ב ($)</option>
+            <option value="EUR">אירו (€)</option>
+            <option value="GBP">ליש"ט (£)</option>
+            <option value="ILS">שקל (₪)</option>
+        </select>
+        <label>למטבע</label>
+        <select id="currTo">
+            <option value="ILS">שקל (₪)</option>
+            <option value="USD">דולר ארה"ב ($)</option>
+            <option value="EUR">אירו (€)</option>
+        </select>
+        <button onclick="runCurrencyCalc()">המר</button>
+        <div id="currencyResult" class="result"></div>
+    </div>
+
+    <!-- Compound Interest -->
+    <div class="card">
+        <h2>
+            <span>💰</span>
+            חיסכון וריבית דריבית
+        </h2>
+        <label>הפקדה ראשונית (₪)</label>
+        <input type="number" id="savInitial" placeholder="10000">
+        <label>הפקדה חודשית (₪)</label>
+        <input type="number" id="savMonthly" placeholder="1000">
+        <label>תקופה (שנים)</label>
+        <input type="number" id="savYears" placeholder="10">
+        <label>תשואה שנתית (%)</label>
+        <input type="number" id="savRate" placeholder="5">
+        <button onclick="runSavingsCalc()">חשב עתידי</button>
+        <div id="savingsResult" class="result"></div>
+    </div>
+
+    <!-- News Feed (Mock) -->
+    <div class="card" style="grid-column: 1 / -1;">
         <h2>
             <span>📈</span>
             מבזקי שוק
@@ -320,7 +365,6 @@
         const neto = window.calculateSimpleNeto(bruto);
         const el = document.getElementById('salaryResult');
         el.style.color = "var(--success-color)";
-        // Animate counting up? For now just text.
         el.innerText = "₪" + neto.toLocaleString();
     }
 
@@ -328,7 +372,6 @@
         const amount = parseFloat(document.getElementById('mortgageAmount').value);
         const years = parseFloat(document.getElementById('mortgageYears').value);
         const rate = parseFloat(document.getElementById('mortgageRate').value);
-
         const el = document.getElementById('mortgageResult');
 
         if (isNaN(amount) || isNaN(years) || isNaN(rate)) {
@@ -336,10 +379,42 @@
             el.style.color = "#ef4444";
             return;
         }
-
         const payment = window.calculateMortgage(amount, years, rate);
         el.style.color = "var(--success-color)";
         el.innerText = "₪" + parseFloat(payment).toLocaleString();
+    }
+
+    function runCurrencyCalc() {
+        const amount = parseFloat(document.getElementById('currAmount').value);
+        const from = document.getElementById('currFrom').value;
+        const to = document.getElementById('currTo').value;
+        const el = document.getElementById('currencyResult');
+
+        if (isNaN(amount)) {
+            el.innerText = "נא להזין סכום";
+            el.style.color = "#ef4444";
+            return;
+        }
+        const result = window.calculateCurrency(amount, from, to);
+        el.style.color = "var(--success-color)";
+        el.innerText = parseFloat(result).toLocaleString();
+    }
+
+    function runSavingsCalc() {
+        const initial = parseFloat(document.getElementById('savInitial').value);
+        const monthly = parseFloat(document.getElementById('savMonthly').value);
+        const years = parseFloat(document.getElementById('savYears').value);
+        const rate = parseFloat(document.getElementById('savRate').value);
+        const el = document.getElementById('savingsResult');
+
+        if (isNaN(initial) || isNaN(monthly) || isNaN(years) || isNaN(rate)) {
+            el.innerText = "חסרים נתונים";
+            el.style.color = "#ef4444";
+            return;
+        }
+        const total = window.calculateSavings(initial, monthly, years, rate);
+        el.style.color = "var(--success-color)";
+        el.innerText = "₪" + parseFloat(total).toLocaleString();
     }
 </script>
 

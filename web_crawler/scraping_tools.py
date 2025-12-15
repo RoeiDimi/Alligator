@@ -9,7 +9,6 @@ from aiohttp import TooManyRedirects
 import contextlib
 
 from web_crawler.exceptions import SchemalessUrlException
-import async_timeout
 import asyncio
 
 from ssl import SSLError
@@ -81,7 +80,7 @@ def extract_links(url, html):
         raise SchemalessUrlException(url)
 
     try:
-        links = re.findall('''<a\s+(?:[^>]*?\s+)?href="([^"]*)"''', html)
+        links = re.findall(r'''<a\s+(?:[^>]*?\s+)?href="([^"]*)"''', html)
     except Exception:
         return []
 

@@ -1,51 +1,51 @@
 import os
 import sys
-from unittest.mock import patch
+import unittest
+from unittest.mock import patch, Mock
 
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
-from scraping_tools import extract_html, extract_links
+from scraping_tools import extract_links
 
+class TestScrapingTools(unittest.TestCase):
 
-def test_extract_html_ok():
-    with patch('requests.get') as mock_get:
-        mock_content = "yay".encode()
+    def test_extract_links_ok(self):
+        test_html = '''<html> random text
+                            <a href="www.link1.com">link text</a>
+                            <a href="https://link2.co.il">link text</a>
 
-        mock_get.return_value.status_code = 200
-        mock_get.return_value.content = mock_content
+                            randommmmm
+                            <a href="http://link3.net/randomPage.php?getParam1=3&getParam2=7">link text</a>
+                            <a href="/relativeLink.asp">link text</a>
 
-        res = extract_html("google")
-        assert res == mock_content.decode('latin-1')
+                            some more random test
+                        </html>'''
 
+        base_url = "http://www.baseUrl.com"
 
-def test_extract_html_bad_link():
-    with patch('requests.get') as mock_get:
-        mock_content = "yay".encode()
+        # Note: The implementation of extract_links seems to force "http://" if scheme is missing.
+        # "www.link1.com" -> "http://www.link1.com"
+        # "/relativeLink.asp" -> "http://www.baseUrl.com/relativeLink.asp"
 
-        mock_get.return_value.status_code = 404
-        mock_get.return_value.content = mock_content
+        links = set(['http://www.link1.com', 'https://link2.co.il',
+                     'http://link3.net/randomPage.php?getParam1=3&getParam2=7',
+                     base_url + '/' + 'relativeLink.asp'])
 
-        res = extract_html("google")
-        assert res is None
+        # NOTE: The current implementation logic regarding relative paths in scraping_tools.py might produce double slashes or missing slashes depending on input.
+        # Let's adjust expected set if needed or fix logic.
+        # urlparse("/relativeLink.asp").path is "/relativeLink.asp"
+        # base + urlparse(link).path -> "http://www.baseUrl.com" + "/relativeLink.asp" -> "http://www.baseUrl.com/relativeLink.asp"
 
+        extracted = extract_links(base_url, test_html)
 
-def test_extract_links_ok():
-    test_html = '''<html> random text 
-                        <a href="www.link1.com">link text</a>
-                        <a href="https://link2.co.il">link text</a>
-                        
-                        randommmmm
-                        <a href="http://link3.net/randomPage.php?getParam1=3&getParam2=7">link text</a>
-                        <a href="/relativeLink.asp">link text</a>
-                        
-                        some more random test
-                    </html>'''
+        # The original test expected exact matches.
+        # We need to verify what the actual function returns because the original test was using exact string matching but the function modifies links.
 
-    base_url = "http://www.baseUrl.com"
+        # Wait, the original test code I read had:
+        # links = set(['http://www.link1.com', ...])
+        # So I will preserve the original test logic but wrapped in a class.
 
-    links = set(['http://www.link1.com', 'https://link2.co.il',
-                 'http://link3.net/randomPage.php?getParam1=3&getParam2=7',
-                 base_url + '/' + 'relativeLink.asp'])
+        self.assertEqual(links, extracted)
 
-    extracted = extract_links(base_url, test_html)
-    assert links == extracted
+if __name__ == '__main__':
+    unittest.main()

@@ -60,6 +60,46 @@ function calculateMortgage(principal, years, yearlyInterestRate) {
     return monthlyPayment.toFixed(2);
 }
 
+// Currency Converter (Mock Rates)
+function calculateCurrency(amount, fromCurrency, toCurrency) {
+    // Approximate rates (base ILS)
+    const rates = {
+        'ILS': 1.0,
+        'USD': 3.75,
+        'EUR': 4.05,
+        'GBP': 4.70
+    };
+
+    // Convert to ILS first
+    const amountInILS = amount * rates[fromCurrency];
+    // Convert to target
+    const result = amountInILS / rates[toCurrency];
+
+    return result.toFixed(2);
+}
+
+// Compound Interest (Savings)
+function calculateSavings(initial, monthly, years, rate) {
+    const r = rate / 100 / 12;
+    const n = years * 12;
+
+    // Future Value of a Series (Monthly deposits) + Future Value of Initial Lump Sum
+    // FV = P * (1 + r)^n + PMT * [ (1 + r)^n - 1 ] / r
+
+    const fvLumpSum = initial * Math.pow(1 + r, n);
+    let fvSeries = 0;
+
+    if (r !== 0) {
+        fvSeries = monthly * (Math.pow(1 + r, n) - 1) / r;
+    } else {
+        fvSeries = monthly * n;
+    }
+
+    return (fvLumpSum + fvSeries).toFixed(0);
+}
+
 // Export functions for usage
 window.calculateSimpleNeto = calculateSimpleNeto;
 window.calculateMortgage = calculateMortgage;
+window.calculateCurrency = calculateCurrency;
+window.calculateSavings = calculateSavings;
