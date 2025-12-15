@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import pytz
 import string
 
-HOST = "10.0.0.112"
+HOST = "http://10.0.0.112:9200"
 ALL_PAGES_INDEX = "all_web_pages_small_html-index"
 MAX_HTML_SIZE_CHARS = 10 ** 4
 
@@ -21,6 +21,8 @@ def insert_web_page(web_page_info):
                  body=web_page_to_json(web_page_info))
     except exceptions.ConflictError:
         print("failed to add " + web_page_info.url + " because it already exists in elastic")
+    except Exception as e:
+        print(f"Failed to insert to ElasticSearch ({HOST}): {e}")
 
 
 def web_page_to_json(web_page_info):

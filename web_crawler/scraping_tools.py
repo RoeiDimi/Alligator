@@ -42,7 +42,7 @@ async def fetch(url, session, semaphore):
     with suppress_ssl_exception_report():
         async with semaphore:
             print("semaphore value: {0}".format(semaphore._value))
-            with async_timeout.timeout(30):
+            async with asyncio.timeout(30):
                 async with session.get(url, max_redirects=30) as response:
                     return await response.text('latin-1'), response.status, response.headers
 

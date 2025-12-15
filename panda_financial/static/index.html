@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panda Financial - Israel</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { color: #2c3e50; }
+        .container { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; }
+        label { display: block; margin: 10px 0 5px; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 16px; }
+        button:hover { background-color: #2980b9; }
+        .result { font-size: 1.2em; font-weight: bold; margin-top: 15px; color: #27ae60; text-align: center; }
+        .news-list { list-style: none; padding: 0; }
+        .news-list li { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .news-list a { text-decoration: none; color: #2c3e50; font-weight: 500; }
+        .news-list a:hover { color: #3498db; }
+        footer { margin-top: 50px; text-align: center; font-size: 0.9em; color: #777; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🐼 Panda Financial</h1>
+    <p>המרכז הפיננסי שלך בישראל</p>
+</header>
+
+<div class="container">
+
+    <!-- Salary Calculator -->
+    <div class="card">
+        <h2>מחשבון שכר (נטו מול ברוטו)</h2>
+        <label>שכר ברוטו (₪):</label>
+        <input type="number" id="brutoInput" placeholder="למשל: 15000">
+        <button onclick="runSalaryCalc()">חשב נטו</button>
+        <div id="salaryResult" class="result"></div>
+    </div>
+
+    <!-- Mortgage Calculator -->
+    <div class="card">
+        <h2>מחשבון משכנתא</h2>
+        <label>סכום ההלוואה (₪):</label>
+        <input type="number" id="mortgageAmount" placeholder="למשל: 1000000">
+        <label>תקופה בשנים:</label>
+        <input type="number" id="mortgageYears" placeholder="למשל: 25">
+        <label>ריבית שנתית (%):</label>
+        <input type="number" id="mortgageRate" placeholder="למשל: 4.5">
+        <button onclick="runMortgageCalc()">חשב החזר חודשי</button>
+        <div id="mortgageResult" class="result"></div>
+    </div>
+
+    <!-- News Feed (Mock) -->
+    <div class="card">
+        <h2>חדשות כלכלה (Live)</h2>
+        <ul class="news-list">
+            <li><a href="#">גלובס: הבורסה בתל אביב ננעלה בעליות שערים</a></li>
+            <li><a href="#">כלכליסט: בנק ישראל הותיר את הריבית ללא שינוי</a></li>
+            <li><a href="#">דה-מרקר: מחירי הדיור ממשיכים לעלות</a></li>
+            <li><a href="#">ביזפורטל: הדולר נחלש מול השקל</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<footer>
+    &copy; 2024 Panda Financial.
+</footer>
+
+<script src="calculators.js"></script>
+<script>
+    function runSalaryCalc() {
+        const bruto = parseFloat(document.getElementById('brutoInput').value);
+        if (isNaN(bruto)) {
+            document.getElementById('salaryResult').innerText = "נא להזין סכום תקין";
+            return;
+        }
+        const neto = window.calculateSimpleNeto(bruto);
+        document.getElementById('salaryResult').innerText = "שכר נטו משוער: ₪" + neto.toLocaleString();
+    }
+
+    function runMortgageCalc() {
+        const amount = parseFloat(document.getElementById('mortgageAmount').value);
+        const years = parseFloat(document.getElementById('mortgageYears').value);
+        const rate = parseFloat(document.getElementById('mortgageRate').value);
+
+        if (isNaN(amount) || isNaN(years) || isNaN(rate)) {
+            document.getElementById('mortgageResult').innerText = "נא להזין את כל הנתונים";
+            return;
+        }
+
+        const payment = window.calculateMortgage(amount, years, rate);
+        document.getElementById('mortgageResult').innerText = "החזר חודשי: ₪" + parseFloat(payment).toLocaleString();
+    }
+</script>
+
+</body>
+</html>
